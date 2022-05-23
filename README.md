@@ -1,74 +1,45 @@
-# Data analysis
-- Document here the project: iworkout
-- Description: Project Description
-- Data Source:
-- Type of analysis:
 
-Please document the project the better you can.
+# iworkout pose classification and estimation
 
-# Startup the project
+iworkout is a data project for fitness beginners.
+This github repo is mainly to show our pose classification and angle algorithm model.
 
-The initial setup.
+# database
 
-Create virtualenv and install the project:
-```bash
-sudo apt-get install virtualenv python-pip python-dev
-deactivate; virtualenv ~/venv ; source ~/venv/bin/activate ;\
-    pip install pip -U; pip install -r requirements.txt
-```
+iworkout includes 5 basic workout poses: squat,deadlift,bench press,push up,hip bridge
 
-Unittest test:
-```bash
-make clean install test
-```
+resource(1):https://saketshirsath.github.io/cv.github.io/
+resource(2):https://drive.google.com/drive/folders/1X9fq3w2gB88vJGCKM7bhG3C4u24v3pCL?usp=sharing
 
-Check for iworkout in gitlab.com/{group}.
-If your project is not set please add it:
+scraper tool:https://github.com/ohyicong/Google-Image-Scraper
 
-- Create a new project on `gitlab.com/{group}/iworkout`
-- Then populate it:
+# pose classfication
 
-```bash
-##   e.g. if group is "{group}" and project_name is "iworkout"
-git remote add origin git@github.com:{group}/iworkout.git
-git push -u origin master
-git push -u origin --tags
-```
+-Step 1: From image to csv
 
-Functionnal test with a script:
+Mediapipe has its own pose classification solution which can run in a Jupyter Notebook or Google Colab. The main logic is to bootstrap every image, get its 33 landmarks and save into a csv, which can be used for ML model training.
 
-```bash
-cd
-mkdir tmp
-cd tmp
-iworkout-run
-```
+Please Check notebooks/Pose_classification_(basic).ipynb
+Image for landmarks: pose_tracking_full_body_landmarks.png
 
-# Install
+-Step 2: Build up ML model
 
-Go to `https://github.com/{group}/iworkout` to see the project, manage issues,
-setup you ssh public key, ...
+Combine the power of Mediapipe,OpenCV and Scikit-Learn. A simple RandomForest Classifier can output high accuracy of prediction.
 
-Create a python3 virtualenv and activate it:
+Please Check notebooks/Body_pose_predict.ipynb , iworkout/model.py
 
-```bash
-sudo apt-get install virtualenv python-pip python-dev
-deactivate; virtualenv -ppython3 ~/venv ; source ~/venv/bin/activate
-```
+# pose estimation
 
-Clone the project and install it:
+-Step 1: poseDetector class
 
-```bash
-git clone git@github.com:{group}/iworkout.git
-cd iworkout
-pip install -r requirements.txt
-make clean install test                # install and test
-```
-Functionnal test with a script:
+Prepare angle functions to do some normalization. Due to the reason that Mediapipe is still sensitive to camera angles, we need to preprocess our pose angles first to guarantee that all numbers are within the range of 0-180.
 
-```bash
-cd
-mkdir tmp
-cd tmp
-iworkout-run
-```
+Please Check iworkout/poseDetector.py
+
+-Step 2: layers of pose estimation
+
+Balance is the breakpoint.
+
+With the help of a professional fitness coach, our algorithm focuses on comparing angles of both sides to check the whole body balance. Same for each key component to check the balance of shoulders,hips,knees and etc so that we can output corresponding tips for users to workout properly.
+
+Please Check iworkout/angle_English.py, iworkout/angle_chinese.py

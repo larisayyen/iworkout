@@ -14,9 +14,7 @@ resource(2): https://drive.google.com/drive/folders/1X9fq3w2gB88vJGCKM7bhG3C4u24
 
 web scraping tool: https://github.com/ohyicong/Google-Image-Scraper
 
-# Pose Classfication
-
--> Step1: From image to csv
+# Classfication - From image to csv
 
 Mediapipe has its own pose classification solution. The main logic is to bootstrap every image, get its 33 landmarks and save into a csv, which can be used for ML model training.
 
@@ -41,7 +39,7 @@ if pose_landmarks is not None:
 For more details,please check notebooks/Pose_classification_(basic).ipynb
 
 
--> Step 2: Build up ML model
+# Classfication - Build up ML model
 
 Combine the power of Mediapipe,OpenCV and Scikit-Learn. A simple RandomForest Classifier can output high accuracy of prediction.
 
@@ -53,9 +51,7 @@ def run(self):
 
 For more details,please check iworkout/model.py
 
-# pose estimation
-
--> Step 1: poseDetector class
+# Estimation - poseDetector class
 
 Prepare basic functions to do some angle normalization. Due to the fact that Mediapipe is still sensitive to camera angles, we need to preprocess our pose angles first to guarantee that all numbers are within the range of 0-180.
 
@@ -94,10 +90,28 @@ def check(d1,d2):
 
 For more details,please check iworkout/poseDetector.py, iworkout/angle_English.py
 
--> Step 2: layers of pose estimation
+# Estimation - layers of algorithm
 
 Balance is the breakpoint.
 
 With the help of a professional fitness coach, our algorithm focuses on comparing angles of both sides to check the whole body balance. Same for each key component to check the balance of shoulders,hips,knees and etc. so that we can output corresponding tips for users to workout properly.
+
+```bash
+#algorithm for squat
+right_sum = squat_mins['squat_head_to_hip_right']+squat_mins['squat_hip_to_ankle_right']+squat_mins['squat_hip_right']
+left_sum = squat_mins['squat_head_to_hip_left']+squat_mins['squat_hip_to_ankle_left']+squat_mins['squat_hip_left']
+
+if abs(int(right_sum - left_sum)) <= 30:
+    if abs(int(squat_mins['squat_head_to_hip_right'] - squat_mins['squat_head_to_hip_left'])) <=10:
+        if abs(int(squat_mins['squat_hip_right'] - squat_mins['squat_hip_left'])) <= 10:
+            if abs(int(squat_mins['squat_hip_to_ankle_right'] - squat_mins['squat_hip_to_ankle_left'])) <= 10:
+                score += 100
+                return f'score = {score} => Nice! Your shoulder,hip and knees are on the same line. Keep your abs and hips tighten.'
+            else:
+                score += 50
+                ha_right = squat_mins['squat_hip_to_ankle_right']
+                ha_left = squat_mins['squat_hip_to_ankle_left']
+                return f'score = {score} => AI detect knee imbalance! Knee angles : right - {ha_right},left - {ha_left} . Keep knees over ankles,straight your back,and tighten your abdominals.'
+```
 
 For more details,please check iworkout/angle_English.py, iworkout/angle_chinese.py

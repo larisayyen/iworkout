@@ -9,6 +9,7 @@ This github repo is mainly to show our pose classification and angle algorithm m
 iworkout includes 5 basic workout poses: squat,deadlift,bench press,push up,hip bridge.
 
 resource(1): https://saketshirsath.github.io/cv.github.io/
+
 resource(2): https://drive.google.com/drive/folders/1X9fq3w2gB88vJGCKM7bhG3C4u24v3pCL?usp=sharing
 
 web scraping tool: https://github.com/ohyicong/Google-Image-Scraper
